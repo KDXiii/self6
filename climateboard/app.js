@@ -17,6 +17,7 @@ const loadData = async () => {
     $('#status').hide();
     renderCards(data);
     renderBarChart(data);
+    renderLineChart(data);
   } catch (error) {
     $('#status').text('加载失败：' + error.message).show();
   }
@@ -76,5 +77,41 @@ const renderBarChart = (data) => {
     }]
   });
 };
+
+let lineChart = null;
+
+const renderLineChart = (data) => {
+  if (lineChart !== null) {
+    lineChart.destroy();
+  }
+  const tempSeries = data.series.filter(s => s['temp-high'] || s['temp-low']);
+  const ctx = document.querySelector('#line-chart');
+  lineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.days,
+      datasets: tempSeries.map(s => {
+        const key = getSeriesKey(s);
+        return {
+          label: s[key],
+          data: s.counts,
+          borderWidth: 1,
+          tension: 0.3
+        };
+      })
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: '日气温变化趋势(℃)' }
+      }
+    }
+  });
+};
+
+window.addEventListener('resize', () => {
+  if (barChart) barChart.resize();
+});
 
 loadData();
