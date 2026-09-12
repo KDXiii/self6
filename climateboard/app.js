@@ -55,6 +55,10 @@ const renderCards = (data) => {
       </div>
     `);
   });
+  // jQuery 交互：点击卡片切换高亮
+  $('#cards').on('click', '.card', function () {
+    $(this).toggleClass('active');
+  });
 };
 
 let barChart = null;
