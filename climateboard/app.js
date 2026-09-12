@@ -33,15 +33,15 @@ const renderCards = (data) => {
     if (key === 'temp-high') {
       value = Math.max(...s.counts);
       unit = '℃';
-      desc = '本周最高气温';
+      desc = '近15天最高气温';
     } else if (key === 'temp-low') {
       value = Math.min(...s.counts);
       unit = '℃';
-      desc = '本周最低气温';
+      desc = '近15天最低气温';
     } else {
       value = s.counts.reduce((sum, n) => sum + n, 0);
       unit = 'mm';
-      desc = `共${data.days.length}天累计`;
+      desc = `近15天累计降水量`;
     }
     $('#cards').append(`
       <div class="col-4">
@@ -55,7 +55,7 @@ const renderCards = (data) => {
       </div>
     `);
   });
-  // jQuery 交互：点击卡片切换高亮
+
   $('#cards').on('click', '.card', function () {
     $(this).toggleClass('active');
   });
@@ -70,7 +70,7 @@ const renderBarChart = (data) => {
     barChart = echarts.init(document.querySelector('#bar-chart'));
   }
   barChart.setOption({
-    title: { text: '本周降水量(mm)', left: 'center' },
+    title: { text: '近15天降水量(mm)', left: 'center' },
     tooltip: { trigger: 'axis' },
     xAxis: { type: 'category', data: data.days },
     yAxis: { name: 'mm' },
