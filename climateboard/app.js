@@ -16,6 +16,7 @@ const loadData = async () => {
     $('#sub-title').text(data.title + ' · 数据来源：' + data.source);
     $('#status').hide();
     renderCards(data);
+    renderBarChart(data);
   } catch (error) {
     $('#status').text('加载失败：' + error.message).show();
   }
@@ -52,6 +53,27 @@ const renderCards = (data) => {
         </div>
       </div>
     `);
+  });
+};
+
+let barChart = null;
+
+const renderBarChart = (data) => {
+  const rainfall = data.series.find(s => s['rainfall']);
+  if (!rainfall) return;
+  if (barChart === null) {
+    barChart = echarts.init(document.querySelector('#bar-chart'));
+  }
+  barChart.setOption({
+    title: { text: '本周降水量(mm)', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: data.days },
+    yAxis: { name: 'mm' },
+    series: [{
+      name: '降水量(mm)',
+      type: 'bar',
+      data: rainfall.counts
+    }]
   });
 };
 
